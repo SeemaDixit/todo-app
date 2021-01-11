@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
+import NewTodoForm from './NewTodoForm';
+import TodoList from './TodoList';
 import './App.css';
 
 class App extends Component {
@@ -22,7 +24,6 @@ class App extends Component {
   }
   formSubmitted(event) {
     event.preventDefault();
-    console.log(this.state.newTodo);
     this.setState({
       newTodo: '',
       todos: [...this.state.todos, {
@@ -67,23 +68,17 @@ class App extends Component {
     return (
       <div className="App">
         <h1>{this.state.message}</h1>
-        <form onSubmit={this.formSubmitted}>
-          <label htmlFor="newTodo">New Todo</label>
-          <input onChange={this.newTodoChanged}  id="newTodo" name="newTodo" value={this.state.newTodo}/>
-          <button type="submit">Add Todo</button>
-        </form>
+        <NewTodoForm  
+        newTodo={this.state.newTodo}
+        formSubmitted={this.formSubmitted.bind(this)}
+        newTodoChanged={this.newTodoChanged.bind(this)}
+        />
         <button onClick={() => this.allDone()}>All Done</button>
-        <ul>
-          {
-            this.state.todos.map((todo, index) => {
-              return <li key={todo.title}>
-                <input type="checkbox"  onChange={(event) => this.toggleTodoDone(event, index)} checked={todo.done} />
-                <span className={todo.done ? 'done' : ''}>{todo.title}</span>
-                <button onClick={()=> this.removeTodo(index)}>Remove</button>
-                </li>
-            })
-          }
-        </ul>
+        <TodoList 
+          todos={this.state.todos}
+          toggleTodoDone={this.toggleTodoDone.bind(this)}
+          removeTodo={this.removeTodo.bind(this)}
+        />
       </div>
     );
   }
