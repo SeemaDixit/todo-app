@@ -31,7 +31,7 @@ const App = () => {
     console.log(todos);
   }, [todos]);
 
-  const addTodo = useCallback((todo, index) => (event) => {
+  const toggleTodoDone = useCallback((todo, index) => (event) => {
       const newTodos = [...todos];
       newTodos.splice(index, 1, {
         ...todo,
@@ -47,40 +47,36 @@ const App = () => {
     setTodos(updatedTodo);
   }, [todos]);
 
+  const markAllDone = useCallback(()=> {
+    const updatedTodos = todos.map(todo => {
+      return {
+        ...todo,
+        done: true
+      }
+    });
+    setTodos(updatedTodos);
+  }, [todos]);
+
   return (
     <div className="App">
       <h1>Todo List</h1>
-      <form onSubmit={formSubmitted}>
-        <label htmlFor="newTodo">Enter a Todo: </label>
-        <input 
-          id="newTodo"
-          value={newTodo}
-          onChange={newTodoChanged}
-        />
-        <button>Add Todo</button>
-      </form>
-      <ul>
-        { 
-          todos.map((todo, index) => {
-            return ( <li key={todo.id}>
-              <input 
-                checked={todo.done}
-                type="checkbox" 
-                onChange={addTodo(todo, index)}
-              />
-              <span className={todo.done ? 'done': ''}>{todo.title}</span>
-              <button onClick={removeTodo(index)}>Remove Todo</button>
-              </li>
-              )
-          })
-        }
-      </ul>
-
+      <NewTodoForm  
+        newTodo={newTodo}
+        formSubmitted={formSubmitted}
+        newTodoChanged={newTodoChanged}
+      />
+      <button onClick={markAllDone}>Mark All Done</button>
+      <TodoList 
+        todos={todos}
+        toggleTodoDone={toggleTodoDone}
+        removeTodo={removeTodo}
+      />
     </div>
   );
 }
 
-/* class App extends Component {
+/*  With class components
+class App extends Component {
   constructor() {
     super();
     this.state = {

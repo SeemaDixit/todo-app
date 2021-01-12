@@ -11,8 +11,8 @@ const TodoList = (props) => {
                     key={index}
                     index={index}
                     todo={todo}
-                    toggleTodoDone={props.toggleTodoDone}
-                    removeTodo={props.removeTodo}
+                    toggleTodoDone={props.toggleTodoDone(todo, index)}
+                    removeTodo={props.removeTodo(index)}
                 />
                 )
             })
