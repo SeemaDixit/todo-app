@@ -1,11 +1,13 @@
 import React from 'react';
+import { Button, TextField } from '@material-ui/core';
+
 
 const NewTodoForm = (props) => {
     return (
         <form onSubmit={props.formSubmitted}>
             <label htmlFor="newTodo">New Todo</label>
-            <input onChange={props.newTodoChanged}  id="newTodo" name="newTodo" value={props.newTodo}/>
-            <button type="submit">Add Todo</button>
+            <TextField variant="outlined" onChange={props.newTodoChanged}  id="newTodo" name="newTodo" value={props.newTodo}/>
+            <Button variant="contained"  color="primary" type="submit">Add Todo</Button>
         </form>
     );
 }

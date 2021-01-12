@@ -1,10 +1,86 @@
-import React, {Component} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import logo from './logo.svg';
 import NewTodoForm from './NewTodoForm';
 import TodoList from './TodoList';
 import './App.css';
 
-class App extends Component {
+const App = () => {
+
+  const [newTodo, setNewTodo] = useState(' ');
+  const [todos, setTodos] = useState([]);
+
+  const newTodoChanged = useCallback((event) => {
+    setNewTodo(event.target.value);
+  }, []);
+  const formSubmitted = useCallback((event) => {
+    event.preventDefault();
+    if(!newTodo.trim()) return;
+
+    setTodos([
+      ...todos,
+      {
+        id: todos.length ? todos[todos.length-1].id + 1 : 1,
+        title: newTodo,
+        done: false
+      }
+    ]);
+    setNewTodo('');
+  }, [newTodo, todos]);
+
+  useEffect(() => {
+    console.log(todos);
+  }, [todos]);
+
+  const addTodo = useCallback((todo, index) => (event) => {
+      const newTodos = [...todos];
+      newTodos.splice(index, 1, {
+        ...todo,
+        done: event.target.checked
+      });
+      setTodos(newTodos);
+  }, [todos]);
+
+  const removeTodo = useCallback((index) => (event) => {
+    const updatedTodo = [...todos];
+    updatedTodo.splice(index, 1);
+
+    setTodos(updatedTodo);
+  }, [todos]);
+
+  return (
+    <div className="App">
+      <h1>Todo List</h1>
+      <form onSubmit={formSubmitted}>
+        <label htmlFor="newTodo">Enter a Todo: </label>
+        <input 
+          id="newTodo"
+          value={newTodo}
+          onChange={newTodoChanged}
+        />
+        <button>Add Todo</button>
+      </form>
+      <ul>
+        { 
+          todos.map((todo, index) => {
+            return ( <li key={todo.id}>
+              <input 
+                checked={todo.done}
+                type="checkbox" 
+                onChange={addTodo(todo, index)}
+              />
+              <span className={todo.done ? 'done': ''}>{todo.title}</span>
+              <button onClick={removeTodo(index)}>Remove Todo</button>
+              </li>
+              )
+          })
+        }
+      </ul>
+
+    </div>
+  );
+}
+
+/* class App extends Component {
   constructor() {
     super();
     this.state = {
@@ -82,5 +158,5 @@ class App extends Component {
       </div>
     );
   }
-}
+} */
 export default App;
